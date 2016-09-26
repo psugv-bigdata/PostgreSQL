@@ -1,4 +1,4 @@
-FROM psu_ubuntu_java 
+FROM ubuntu
 
 
 # Add the PostgreSQL PGP key to verify their Debian packages.
