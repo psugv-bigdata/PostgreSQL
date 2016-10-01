@@ -11,7 +11,8 @@ Steps:
 4. We need to build the image before it can be deployed in the docker engine. Navigate to directory where the Docker file is placed and run the below command :
 
 - $ docker build .
-Note the image id at displayed by docker at the end of the successful build. It should be something similar to this "6499caea23b6" 
+
+* Note the image id at displayed by docker at the end of the successful build. It should be something similar to this "6499caea23b6" 
 
 * The container can be deployed/run on the host machine using the below command:
 - $ docker run --name postgredbase -d -p 6320:5728 -v /home/docker/DockerImages/PostgreSQL/imagedata/:/PostgresImageData 987a2799c74f
