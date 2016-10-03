@@ -23,11 +23,14 @@ RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.3/main/pg_hba.co
 # And add ``listen_addresses`` to ``/etc/postgresql/9.3/main/postgresql.conf``
 RUN echo "listen_addresses='*'" >> /etc/postgresql/9.3/main/postgresql.conf
 
+# Change PostgreSQL port in postgresql.conf file
+RUN sed -i -e 's/5432/5728/g' /etc/postgresql/9.3/main/postgresql.conf
+
+#Start the Postgresql daemon
+RUN    /etc/init.d/postgresql start && psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';"
+
 # Expose the PostgreSQL port
 EXPOSE 5728
-
-# Add VOLUMEs to allow backup of config, logs and databases
-VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 
 #Add new Volume to allow database backup
 VOLUME ["/PostgresImageData"]
