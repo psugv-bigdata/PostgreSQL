@@ -11,10 +11,18 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" > /etc
 # Install ``python-software-properties``, ``software-properties-common`` and PostgreSQL 9.3
 #  There are some warnings (in red) that show up during the build. You can hide
 #  them by prefixing each apt-get statement with DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y python-software-properties software-properties-common postgresql-9.3 postgresql-client-9.3 p$
+RUN apt-get update && apt-get install -y python-software-properties software-properties-common postgresql-9.3 &&\
+postgresql-client-9.3 postgresql-contrib-9.3
 
-# Note: The official Debian and Ubuntu images automatically ``apt-get clean``
-# after each ``apt-get``
+
+#Copy the SonarQube database dump to the container
+COPY   sonarexport.pgsql /PostgresImageData/
+COPY   pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
+
+RUN chown postgres /etc/postgresql/9.3/main/pg_hba.conf && chgrp postgres /etc/postgresql/9.3/main/pg_hba.conf &&\
+chmod 640 /etc/postgresql/9.3/main/pg_hba.conf
+
+# Change the user from root to start the database
 USER postgres
 
 # Allow remote connections to PostgreSQL Database.
@@ -26,8 +34,25 @@ RUN echo "listen_addresses='*'" >> /etc/postgresql/9.3/main/postgresql.conf
 # Change PostgreSQL port in postgresql.conf file
 RUN sed -i -e 's/5432/5728/g' /etc/postgresql/9.3/main/postgresql.conf
 
-#Start the Postgresql daemon
-RUN    /etc/init.d/postgresql start && psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';"
+ENV PGPASSWORD=sonar
+#Start the Postgresql daemon and configure for Sonarqube
+RUN    /etc/init.d/postgresql start && psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';" &&\
+psql --command "CREATE ROLE sonar LOGIN ENCRYPTED PASSWORD 'md5b05e02d26b524e4287428984d14a6824' NOSUPERUSER INHERIT CREATEDB NOCREATEROLE NOREPLICATION;" &&\
+createdb -O sonar sonar && pg_dump -U sonar sonar < /PostgresImageData/sonarexport.pgsql
+
+# Expose the PostgreSQL port
+EXPOSE 5728
+
+#Add new Volume to allow database backup
+VOLUME ["/PostgresImageData"]
+
+# Set the default command to run when starting the container
+CMD ["/usr/lib/postgresql/9.3/bin/postgres", "-D", "/var/lib/postgresql/9.3/main", "-c", "config_file=/etc/postgresql/9.3/main/postgresql.conf"]
+
+
+
+
+
 
 # Expose the PostgreSQL port
 EXPOSE 5728
@@ -37,6 +62,4 @@ VOLUME ["/PostgresImageData"]
 
 # Set the default command to run when starting the container
 CMD ["/usr/lib/postgresql/9.3/bin/postgres", "-D", "/var/lib/postgresql/9.3/main", "-c", "config_file=/etc/postgresql/9.3/main/postgr$
-
-
 
