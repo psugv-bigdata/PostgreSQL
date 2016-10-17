@@ -18,7 +18,7 @@ Steps:
 * Note the image id at displayed by docker at the end of the successful build. It should be something similar to this "6499caea23b6" 
 
 * The container can be deployed/run on the host machine using the below command:
-- $ docker run --name postgredbase -d -p 4112:4200 -v /home/docker/DockerImages/PostgreSQL/imagedata/:/PostgresImageData 987a2799c74f
+- $ docker run --name postgredbase -d -p 4112:4200 -v /mnt/Postgresql:/PostgresImageData 987a2799c74f
 
 * Please note your image id may be different than 987a2799c74f
 * The SQL dump of the database system will be available at /home/docker/DockerImages/PostgreSQL/imagedata/
