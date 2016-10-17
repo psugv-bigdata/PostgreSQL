@@ -1,8 +1,10 @@
 #PostgreSQL
 - This is a step by step guide to start a docker container for Postgresql database on Ubuntu 16.04.
 - Please ensure that you have the corresponding Dockerfile before following the procedure steps.
-- Postgresql will be running on port 4200 inside the docker container and the host port to access it is 4112
+- Ensure that pg_hba.conf and sonarexport.pgsql are in the same directory as the Dockerfile.
+- Postgresql will be running on port 4200 inside the docker container and the host port to access it is 4112.
 - The database backups will be available at /home/docker/DockerImages/PostgreSQL/imagedata/
+
 
 Steps:
 ------
