@@ -1,7 +1,7 @@
 #PostgreSQL
 - This is a step by step guide to start a docker container for Postgresql database on Ubuntu 16.04.
 - Please ensure that you have the corresponding Dockerfile before following the procedure steps.
-- Postgresql will be running on port 5728 inside the docker container and the host port to access it is 6320
+- Postgresql will be running on port 4200 inside the docker container and the host port to access it is 4112
 - The database backups will be available at /home/docker/DockerImages/PostgreSQL/imagedata/
 
 Steps:
@@ -16,7 +16,7 @@ Steps:
 * Note the image id at displayed by docker at the end of the successful build. It should be something similar to this "6499caea23b6" 
 
 * The container can be deployed/run on the host machine using the below command:
-- $ docker run --name postgredbase -d -p 6320:5728 -v /home/docker/DockerImages/PostgreSQL/imagedata/:/PostgresImageData 987a2799c74f
+- $ docker run --name postgredbase -d -p 4112:4200 -v /home/docker/DockerImages/PostgreSQL/imagedata/:/PostgresImageData 987a2799c74f
 
 * Please note your image id may be different than 987a2799c74f
 * The SQL dump of the database system will be available at /home/docker/DockerImages/PostgreSQL/imagedata/
@@ -30,6 +30,6 @@ Steps:
 -You should see the name of your container with the associated Container id with current status
 
 * Allow connections to specified port on the host machine using the following command:
-- $ sudo ufw allow 6320
+- $ sudo ufw allow 4112
 
 * You can now connect to this host machine and work with postgresql database with your client.
