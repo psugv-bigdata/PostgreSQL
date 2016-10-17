@@ -32,7 +32,7 @@ RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.3/main/pg_hba.co
 RUN echo "listen_addresses='*'" >> /etc/postgresql/9.3/main/postgresql.conf
 
 # Change PostgreSQL port in postgresql.conf file
-RUN sed -i -e 's/5432/5728/g' /etc/postgresql/9.3/main/postgresql.conf
+RUN sed -i -e 's/5432/4200/g' /etc/postgresql/9.3/main/postgresql.conf
 
 ENV PGPASSWORD=sonar
 #Start the Postgresql daemon and configure for Sonarqube
@@ -41,16 +41,7 @@ psql --command "CREATE ROLE sonar LOGIN ENCRYPTED PASSWORD 'md5b05e02d26b524e428
 createdb -O sonar sonar && pg_dump -U sonar sonar < /PostgresImageData/sonarexport.pgsql
 
 # Expose the PostgreSQL port
-EXPOSE 5728
-
-#Add new Volume to allow database backup
-VOLUME ["/PostgresImageData"]
-
-# Set the default command to run when starting the container
-CMD ["/usr/lib/postgresql/9.3/bin/postgres", "-D", "/var/lib/postgresql/9.3/main", "-c", "config_file=/etc/postgresql/9.3/main/postgresql.conf"]
-
-# Expose the PostgreSQL port
-EXPOSE 5728
+EXPOSE 4200
 
 #Add new Volume to allow database backup
 VOLUME ["/PostgresImageData"]
